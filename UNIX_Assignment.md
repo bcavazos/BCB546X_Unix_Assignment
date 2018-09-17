@@ -14,7 +14,7 @@ I will upload on both Slack and GitHub (look for the "UNIX_Assignment" folder) t
 The files are:
 
 1. `fang_et_al_genotypes.txt`: a published SNP data set including maize, teosinte (i.e., wild maize), and Tripsacum (a close outgroup to the genus _Zea_) individuals
- 
+
 2. `snp_position.txt`: an additional data file that includes the SNP id (first column), chromosome location (third column), nucleotide location (fourth column) and other information for the SNPs genotyped in the `fang_et_al_genotypes.txt` file
 
 ##_Data Processing_
