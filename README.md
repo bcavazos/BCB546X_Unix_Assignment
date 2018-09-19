@@ -61,13 +61,11 @@
   grep -E "(ZMPBA|ZMPIL|ZMPJA)" fang_et_al_genotypes.txt > teosinte_genotypes.txt
   ```
 
-- 
 
-1.
 
-2.
+#### *SNP Position*
 
-ls and du
+
 
 ## Data Processing
 
