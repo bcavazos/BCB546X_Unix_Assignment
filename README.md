@@ -135,13 +135,18 @@ sort -k2n,2 -k3,3n joined_maize.txt > joined_maize_sorted.txt
 
 * to reverse the order of positions, I added an r to in the third column in the sort command 
  `sort -k2n,2 -k3,3nr joined_maize.txt > joined_maize_reversesorted.txt`
- I did this for both maize and teosinte files and followed the same steps as above to make separate files for each chromosome
- 
+ I did this for both maize and teosinte files 
 
-* use `sed` to replace ?/? with -/-
-sed 's/\?/\-/g' name > name
+* to replace ?/? with -/-, I used `sed` on the 'reversesorted' files'
+```
+sed 's/?/-/g' joined_maize_reversesorted.txt > joined_maize_reversesorted_final.txt
+```
+and then use same loop above to make separate files based on chromosome number
 
-
+* for the final two tasks, I used `grep` to find unknown and multiple positions in the genome
+ex. `grep 'multiple' joined_teosinte.txt`
+Although I found a difference when just searching in the third column using `awk`  
+`awk '$3 ~ /multiple/ {print}' joined_maize.txt ` and it is unclear to me which one is correct 
 
 
 
