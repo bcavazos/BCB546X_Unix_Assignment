@@ -14,7 +14,6 @@ du -h snp_position.txt
 84K     snp_position.txt
 ```
 
-
 ## Preparing Files to join
 #### *Maize Group*
  * Before transforming the data, I wanted to pull out the maize groups (ZMMIL, ZMMLR, and ZMMMR) using `grep` and put that output in a new file called `maize_genotypes.txt`
@@ -101,17 +100,46 @@ This makes _way_ more sense now.
 
 #### *SNP Position*
 
-we only care about SNP_ID, Chromosome number, and position so we can cut out all extra info an dhave a new doc
+we only care about SNP_ID, Chromosome number, and position so we can cut out all extra info and have a new doc
 
 
 ## Data Processing
-Make sure the dimension s are the same so take out the headers in everything
+Make sure the dimensions are the same so take out the headers in everything using `awk` and rename file with underscoreNH at the end (no header) 
+for example
+` awk 'NR>3' teosinte_genotypes_forjoin.txt > teosinte_genotypes_forjoin_NH.txt`
+join documents by snp id 
+
 ```
-join -1 1 -2 1 -t $'\t' snp_position_forjoin_NH.txt maize_genotypes_for_join_NH.txt > test.txt`
-wc test.txt
-cut -f 1-5 tet.txt | head | column -t
+join -1 1 -2 1 -t $'\t' snp_position_forjoin_NH.txt maize_genotypes_for_join_NH.txt > joined_maize.txt`
+wc joined_maize.txt
+cut -f 1-5 joined_maize.txt | head | column -t
+
+join -1 1 -2 1 -t $'\t' snp_position_forjoin_NH.txt
+teosinte_genotypes_forjoin_NH.txt > joined_teosinte.txt`
+wc joined_teosinte.txt
+cut -f 1-5 joined_teosinte.txt | head | column -t
+
 ```
-IT WORKED
+now I can reorder everything into the different files
+
+* I used sort to put both the joined_maize.txt and joined_teosinte.txt files in order by first chromosome number, then position
+```
+sort -k2n,2 -k3,3n joined_teosinte.txt > joined_teosinte_sorted.txt
+sort -k2n,2 -k3,3n joined_maize.txt > joined_maize_sorted.txt
+```
+
+* Then I used awk to make each unique chromosome into a separate file 
+`for i in {1..10}; do awk '$2=='$i'' joined_maize_sorted.txt > chr"$i"_maize_genotypes.txt; done`
+* make sure all the sorting worked out okay using `cat` and `head` and `tail`
+* did the same loop for teosinte
+
+* to reverse the order of positions, I added an r to in the third column in the sort command 
+ `sort -k2n,2 -k3,3nr joined_maize.txt > joined_maize_reversesorted.txt`
+ I did this for both maize and teosinte files and followed the same steps as above to make separate files for each chromosome
+ 
+
+* use `sed` to replace ?/? with -/-
+sed 's/\?/\-/g' name > name
 
 
 
