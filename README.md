@@ -5,7 +5,17 @@
  * I first looked at the top and bottom of the `fang_et_al_genotypes` file to see what types of data I was dealing with. This produced a super gross looking output to I cut the first few columns and used column to line everything up
 
    `cut -f 1-12 fang_et_al_genotypes.txt | head | column -t`
+* I also checked file sizes for both the fang and snp document using `du -h`
+```
+du -h fang_et_al_genotypes.txt
+11M     fang_et_al_genotypes.txt
+# ^ pretty big file size
+du -h snp_position.txt
+84K     snp_position.txt
+```
 
+
+## Preparing Files to join
 #### *Maize Group*
  * Before transforming the data, I wanted to pull out the maize groups (ZMMIL, ZMMLR, and ZMMMR) using `grep` and put that output in a new file called `maize_genotypes.txt`
 
@@ -40,7 +50,7 @@
    #so there are 983 SNPs
    ```
 
- * 
+  
 #### *Teosinte Group*
  * I followed the same general trend to extract the teosinte individuals
 
@@ -60,14 +70,48 @@
   
   grep -E "(ZMPBA|ZMPIL|ZMPJA)" fang_et_al_genotypes.txt > teosinte_genotypes.txt
   ```
+* After that I used the awk transformation code provided in the assignment sheet to transform the data and put the output in a new file called transposed_teosinte_genotypes.txt
 
+   `awk -f transpose.awk teosinte_genotypes.txt > transposed_teosinte_genotypes.txt`
+
+ * I then looked at the output of the file using a combination of cut, head and column
+
+   `cut -f 1-5 transposed_maize_genotypes.txt | head | column -t`
+
+ * So now it looks like each column is an individual genotype. To figure out the number of SNPs, I used `wc -l` and subtracted the number of 'metadata' lines (3)
+
+   ```
+   wc -l transposed_teosinte_genotypes.txt
+   986 
+   #so there are 983 SNPs
+   ```
+
+--whoops----------------------------------------------------------------------------
+
+_So_, when I used `grep` in the beginning to pull out maize and teosinte, it got rid of the column names for the fang et al doc. While I am pretty sure that they are in the same order as the snp position, I am going to transpose the fang doc, keep the first column, and cat to the maize and teosinte doc so I'll have a common column to join
+```
+awk -f transpose.awk fang_et_al_genotypes.txt > transposed_fang_genotypes.txt`
+cut -f 1 transposed_fang_genotypes.txt > comcolumn.txt
+paste commoncolumn.txt transposed_maize_genotypes.txt | cut -f 1-5 | head | column -t
+paste commoncolumn.txt transposed_maize_genotypes.txt > maize_genotypes_forjoin.txt
+paste commoncolumn.txt transposed_teosinte_genotypes.txt > teosinte_genotypes_forjoin.txt
+```
+This makes _way_ more sense now. 
 
 
 #### *SNP Position*
 
+we only care about SNP_ID, Chromosome number, and position so we can cut out all extra info an dhave a new doc
 
 
 ## Data Processing
+Make sure the dimension s are the same so take out the headers in everything
+```
+join -1 1 -2 1 -t $'\t' snp_position_forjoin_NH.txt maize_genotypes_for_join_NH.txt > test.txt`
+wc test.txt
+cut -f 1-5 tet.txt | head | column -t
+```
+IT WORKED
 
 
 
