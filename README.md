@@ -49,7 +49,7 @@ du -h snp_position.txt
    #so there are 983 SNPs
    ```
 
-  
+
 #### *Teosinte Group*
  * I followed the same general trend to extract the teosinte individuals
 
@@ -102,6 +102,8 @@ This makes _way_ more sense now.
 
 we only care about SNP_ID, Chromosome number, and position so we can cut out all extra info and have a new doc
 
+`cut -f 1,2,4 snp_position.txt > snp_position_forjoin.txt`
+
 
 ## Data Processing
 Make sure the dimensions are the same so take out the headers in everything using `awk` and rename file with underscoreNH at the end (no header) 
@@ -147,6 +149,9 @@ and then use same loop above to make separate files based on chromosome number
 ex. `grep 'multiple' joined_teosinte.txt`
 Although I found a difference when just searching in the third column using `awk`  
 `awk '$3 ~ /multiple/ {print}' joined_maize.txt ` and it is unclear to me which one is correct 
+ex `grep 'multiple' joined_maize.txt > maize_multiple.txt`
+
+
 
 
 
